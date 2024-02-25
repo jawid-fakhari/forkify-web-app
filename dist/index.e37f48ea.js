@@ -601,6 +601,7 @@ const controlRecipes = async function() {
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
     } catch (err) {
         console.log(err);
+        (0, _recipeViewJsDefault.default).renderError();
     }
 };
 const init = function() {
@@ -1869,6 +1870,7 @@ const loadRecipe = async function(id) {
         };
     } catch (err) {
         console.log(`${err}\u{1F4A3}\u{1F4A3}\u{1F4A3}`);
+        throw err;
     }
 };
 
@@ -2531,6 +2533,7 @@ var _fractional = require("fractional");
 class RecipeView {
     #parentEl = document.querySelector(".recipe");
     #data;
+    #errorMessage = "We could not find the recipe you want!";
     render(data) {
         this.#data = data;
         const markup = this.#generateMarkup();
@@ -2548,9 +2551,23 @@ class RecipeView {
           </svg>
         </div>
   `;
-        this.#parentEl.innerHTML = "";
+        this.#clear();
         this.#parentEl.insertAdjacentHTML("afterbegin", markup);
     };
+    renderError(message = this.#errorMessage) {
+        const markup = `
+    <div class="error">
+      <div>
+        <svg>
+          <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div>
+    `;
+        this.#clear();
+        this.#parentEl.insertAdjacentHTML("afterbegin", markup);
+    }
     addHandlerRender(handler) {
         [
             "hashchange",
